@@ -19,7 +19,7 @@ public class DispatcherServlet extends HttpServlet {
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		URI_MAPPING.put(String.format("GET:/%s/jstl", config.getServletContext().getContextPath()), new JstlIndexProcess());
+		URI_MAPPING.put(String.format("GET:%s/jstl", config.getServletContext().getContextPath()), new JstlIndexProcess());
 	}
 	
 	@Override
