@@ -25,6 +25,8 @@
 		<li>&lt;c:if&gt; : if문을 편리하게 사용할 수 있는 태그</li>
 		<li>&lt;c:choose&gt;, &lt;c:when&gt;, &lt;c:otherwise&gt; : if, else if, else문을 사용할 수 있는 태그</li>
 		<li>&lt;c:forEach&gt; : 반복문을 쉽게 사용할 수 있는 태그</li>
+		<li>&lt;c:forTokens&gt; : 전달한 문자열을 split하여 반복문을 돌려주는 태그</li>
+		<li>&lt;c:url&gt; : contextPath를 추가한 url을 편리하게 생성해주는 태그</li>
 	</ul>
 	
 	<h3>어트리뷰트에 추가된 값은 사실 편리하게 꺼내 쓸 수 있는 방법이 있다.</h3>
@@ -127,9 +129,55 @@
 	<h3>반복문 자체의 상태를 볼 수 있는 varStatus</h3>
 	
 	<ul>
-		<c:forEach var="f" items="${fruits}" varStatus="status">
-			<div>${f}(${status.index}번째 아이템, ${status.count}회 반복 중)</div>
-		</c:forEach>
+		<li>status.index : 현재 반복 인덱스(0부터 시작)</li>
+		<li>status.count : 현재 반복 횟수(1부터 시작)</li>
+		<li>status.first : 현재 반복이 첫 번째인가?</li>
+		<li>status.last : 현재 반복이 마지막인가?</li>
+		<li>status.current : 현재 값 (그냥 var 쓰면 됨)</li>
+	</ul>
+	
+	<c:forEach var="f" items="${fruits}" varStatus="status">
+		<div 
+			<c:if test="${status.first}">
+				style="color: red font-weight: bold;"
+			</c:if>
+			<c:if test="${status.last}">
+				style="color: orange font-weight: bold;"
+			</c:if>
+		>
+			${f}(${status.index}번째 아이템, ${status.count}회 반복 중)
+		</div>
+	</c:forEach>
+	
+	<h3>c:forTokens 사용해보기</h3>
+	
+	<c:set var="champions" value="티모/쉬바나/케이틀린/유미/갈리오/마스터이" />
+	
+	<c:forTokens var="champ" varStatus="status" items="${champions}" delims="/">
+		<div>${status.count}번째 챔피언: ${champ}</div>
+	</c:forTokens>
+	
+	<h3>c:url로 url 만들어보기</h3>
+	
+	<ul>
+		<li>절대 경로를 사용할 때는 별 차이 없지만 상대경로를 사용할 때는 contextPath를 앞에 붙여준다.</li>
+		<li><c:url value="https://naver.com" /></li>
+		<li><c:url value="/emp/list" /></li>
+		<li><%=request.getContextPath() %></li>
+		<li>
+			<c:url value="/emp/detail">
+				<c:param name="employee_id">103</c:param>
+				<c:param name="department_id">80</c:param>
+			</c:url>
+		</li>
+		<li>c:url에 var값을 넣어주면 해당 어트리뷰트에 결과가 저장된다.(var을 설정하지 않은 경우 그냥 웹페이지에 출력된다.)</li>
+		<li>
+			<c:url var="to_detail" value="/emp/detail">
+				<c:param name="employee_id">103</c:param>
+				<c:param name="department_id">80</c:param>
+			</c:url>
+			<a href="${to_detail}">사원정보 보러가기</a>
+		</li>
 	</ul>
 </body>
 </html>
